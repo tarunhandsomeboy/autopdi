@@ -1,0 +1,15 @@
+
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.git/
+.github/
+.vscode/
+.env
+.pytest_cache/
+instance/
+uploads/
+*.db
+*.sqlite
+*.sqlite3

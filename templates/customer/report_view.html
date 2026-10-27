@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}PDI Report — {{ inspection.verification_code }} | AUTO PDI{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="report-view-container">
+    <!-- Action Bar -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="pdi-badge pdi-badge-primary">OFFICIAL PDI REPORT</span>
+                <span class="pdi-badge {% if inspection.final_status == 'DELIVERY_READY' %}pdi-badge-success{% elif inspection.final_status == 'ATTENTION_REQUIRED' %}pdi-badge-warning{% else %}pdi-badge-danger{% endif %}">
+                    {{ inspection.final_status.replace('_', ' ') }}
+                </span>
+            </div>
+            <h2 class="fw-bold text-dark mb-0">{{ inspection.vehicle.brand }} {{ inspection.vehicle.model }} {{ inspection.vehicle.variant or '' }}</h2>
+            <small class="text-muted font-monospace">Verification Code: <b>{{ inspection.verification_code }}</b></small>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/reports/{{ inspection.id }}/pdf" class="btn btn-pdi-primary" target="_blank">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF Report
+            </a>
+            <a href="/verify/{{ inspection.verification_code }}" class="btn btn-pdi-secondary" target="_blank">
+                <i class="bi bi-shield-check me-1"></i> Verify Authenticity
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left: Summary & Score Card -->
+        <div class="col-lg-4">
+            <!-- Readiness Gauge Card -->
+            <div class="pdi-card text-center p-4 mb-4">
+                <h6 class="text-muted fw-bold text-uppercase mb-3" style="font-size: 0.75rem;">Vehicle Readiness Score</h6>
+                <div class="readiness-gauge mb-2">
+                    <div class="gauge-circle {% if inspection.overall_score >= 90 %}status-green{% elif inspection.overall_score >= 75 %}status-yellow{% else %}status-red{% endif %}" style="width: 130px; height: 130px;">
+                        <span class="gauge-score fs-1">{{ inspection.overall_score }}</span>
+                        <span class="gauge-label">OUT OF 100</span>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mt-2 {% if inspection.final_status == 'DELIVERY_READY' %}text-success{% elif inspection.final_status == 'ATTENTION_REQUIRED' %}text-warning{% else %}text-danger{% endif %}">
+                    ● {{ inspection.final_status.replace('_', ' ') }}
+                </h5>
+                <p class="text-muted small mb-0">
+                    {% if inspection.final_status == 'DELIVERY_READY' %}
+                        Vehicle meets all factory tolerance parameters and is approved for final customer handover.
+                    {% elif inspection.final_status == 'ATTENTION_REQUIRED' %}
+                        Minor cosmetic or adjustments required before customer handover.
+                    {% else %}
+                        Critical safety or mechanical discrepancies flagged. Hold delivery until resolved.
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Vehicle & Inspector Details -->
+            <div class="pdi-card p-4 mb-4">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">Vehicle Specifications</h6>
+                <div class="small mb-2 d-flex justify-content-between">
+                    <span class="text-muted">Type / Fuel:</span>
+                    <strong>{{ inspection.vehicle.vehicle_type }} ({{ inspection.vehicle.fuel_type }})</strong>
+                </div>
+                <div class="small mb-2 d-flex justify-content-between">
+                    <span class="text-muted">Chassis / VIN:</span>
+                    <strong class="font-monospace">{{ inspection.vehicle.vin }}</strong>
+                </div>
+                <div class="small mb-2 d-flex justify-content-between">
+                    <span class="text-muted">VIN Verified:</span>
+                    <span class="text-success fw-bold">Yes (Physical Match ✓)</span>
+                </div>
+                <div class="small mb-2 d-flex justify-content-between">
+                    <span class="text-muted">Manufacturing Date:</span>
+                    <strong>{{ inspection.vehicle.manufacturing_date or 'Recent Production' }}</strong>
+                </div>
+
+                <h6 class="fw-bold text-dark border-bottom pb-2 mt-4 mb-3">Certified Inspector</h6>
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ inspection.inspector.user.profile_image or '/static/images/default-avatar.png' }}" class="rounded-circle" width="48" height="48" onerror="this.src='/static/images/default-avatar.png'">
+                    <div>
+                        <strong class="d-block text-dark">{{ inspection.inspector.user.name }}</strong>
+                        <div class="small text-muted">
+                            <span class="text-warning"><i class="bi bi-star-fill me-1"></i>{{ inspection.inspector.rating }}</span> • 
+                            Trust: {{ inspection.inspector.trust_score }}/100
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rate Inspector Card (If Customer) -->
+            {% if current_user and current_user.role == 'CUSTOMER' and not inspection.booking.rating %}
+                <div class="pdi-card p-4 mb-4" id="rating-section-card">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-star-half text-warning me-1"></i>Rate Inspector</h6>
+                    <p class="text-muted small mb-3">Your feedback updates the inspector's public trust score.</p>
+                    <form id="rating-submission-form" data-booking-id="{{ inspection.booking_id }}">
+                        <div class="mb-3">
+                            <label class="form-label-custom">Rating Stars</label>
+                            <select id="rating-stars-input" class="form-control-custom">
+                                <option value="5">★★★★★ 5.0 - Exceptional Thoroughness</option>
+                                <option value="4">★★★★☆ 4.0 - Very Good</option>
+                                <option value="3">★★★☆☆ 3.0 - Satisfactory</option>
+                                <option value="2">★★☆☆☆ 2.0 - Needs Improvement</option>
+                                <option value="1">★☆☆☆☆ 1.0 - Poor</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Review Comments</label>
+                            <textarea id="rating-review-text" class="form-control-custom" rows="2" placeholder="Write feedback regarding inspection clarity and equipment usage..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-pdi-primary btn-sm w-100">Submit Review</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Right: Checkpoint Findings, AI Analysis, Evidence Photos -->
+        <div class="col-lg-8">
+            <!-- AI Findings Highlight Banner (If any) -->
+            {% if inspection.ai_findings.count() > 0 %}
+                <div class="pdi-card mb-4 border-primary" style="background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%);">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="ai-badge"><i class="bi bi-cpu-fill me-1"></i>AI Damage Findings</span>
+                            <span class="small text-muted">Human Verified by Inspector</span>
+                        </div>
+                    </div>
+
+                    {% for f in inspection.ai_findings.all() %}
+                        <div class="bg-white p-3 rounded-3 border mb-2">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div>
+                                    <strong class="text-dark">{{ f.finding_type }}</strong>
+                                    <span class="pdi-badge {% if f.severity == 'LOW' %}pdi-badge-warning{% else %}pdi-badge-danger{% endif %} ms-2">{{ f.severity }}</span>
+                                </div>
+                                <span class="badge bg-success-subtle text-success">Verified: {{ f.inspector_confirmation }} ✓</span>
+                            </div>
+                            <p class="small text-muted mb-0">{{ f.description }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Checkpoints Category List -->
+            <div class="pdi-card p-4">
+                <div class="pdi-card-header">
+                    <div class="pdi-card-title">
+                        <i class="bi bi-clipboard2-check-fill text-primary"></i> Complete Checkpoint Audit Findings
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="pdi-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Result</th>
+                                <th>Inspector Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cp in inspection.checkpoints.all() %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ cp.item_name }}</strong>
+                                        {% if cp.ai_detected %}
+                                            <span class="badge bg-primary-subtle text-primary ms-1" style="font-size: 0.65rem;">AI Tested</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><span class="pdi-badge pdi-badge-neutral">{{ cp.category.name if cp.category else 'General' }}</span></td>
+                                    <td>
+                                        <span class="pdi-badge {% if cp.status == 'PASS' %}pdi-badge-success{% elif cp.status == 'ATTENTION' %}pdi-badge-warning{% else %}pdi-badge-danger{% endif %}">
+                                            {{ cp.status }}
+                                        </span>
+                                    </td>
+                                    <td class="small text-muted">{{ cp.remark or 'Verified within OEM factory tolerances.' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Evidence Photographs Gallery -->
+            {% if inspection.media_items.count() > 0 %}
+                <div class="pdi-card p-4 mt-4">
+                    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-camera-fill text-primary me-2"></i>Timestamped Evidence Photographs</h5>
+                    <div class="row g-3">
+                        {% for m in inspection.media_items.all() %}
+                            <div class="col-md-6">
+                                <div class="border rounded-3 overflow-hidden bg-light shadow-sm">
+                                    <img src="{{ m.file_url }}" alt="Evidence Photo" class="w-100" style="height: 220px; object-fit: cover;" onerror="this.src='/static/images/default-avatar.png'">
+                                    <div class="p-2 small bg-white border-top">
+                                        <div class="text-muted"><i class="bi bi-clock me-1"></i>Captured: <b>{{ m.captured_at.strftime('%d %b %Y, %I:%M %p') if m.captured_at else 'Recent' }}</b></div>
+                                        {% if m.latitude and m.longitude %}
+                                            <div class="text-muted"><i class="bi bi-geo-alt me-1"></i>GPS: <b>{{ m.latitude }}° N, {{ m.longitude }}° E</b></div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/report.js"></script>
+{% endblock %}

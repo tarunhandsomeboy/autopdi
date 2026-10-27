@@ -1,0 +1,52 @@
+<footer class="app-footer">
+    <div class="container">
+        <div class="row g-4 pb-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-brand mb-2">
+                    <i class="bi bi-shield-check text-primary me-1"></i> AUTO <span class="text-primary">PDI</span>
+                </div>
+                <p class="text-muted small mb-3">
+                    "Inspect Before You Accept." The premier smart Pre-Delivery Vehicle Inspection platform connecting car buyers with certified automotive diagnostic masters.
+                </p>
+                <div class="d-flex gap-2">
+                    <span class="pdi-badge pdi-badge-primary">AI-Assisted CV</span>
+                    <span class="pdi-badge pdi-badge-success">ICE • EV • Hybrid</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="fw-bold text-dark mb-3">Platform</h6>
+                <ul class="list-unstyled small text-muted">
+                    <li class="mb-2"><a href="/" class="text-muted">Home</a></li>
+                    <li class="mb-2"><a href="/customer/book" class="text-muted">Book PDI</a></li>
+                    <li class="mb-2"><a href="/verify" class="text-muted">Verify Certificate</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="fw-bold text-dark mb-3">Inspectors</h6>
+                <ul class="list-unstyled small text-muted">
+                    <li class="mb-2"><a href="/register" class="text-muted">Join as Expert</a></li>
+                    <li class="mb-2"><a href="/login" class="text-muted">Inspector Portal</a></li>
+                    <li class="mb-2"><a href="/inspector/profile" class="text-muted">Verified Tools</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h6 class="fw-bold text-dark mb-3">Tamper-Proof Verification</h6>
+                <p class="small text-muted mb-2">
+                    Every AUTO PDI inspection report is secured with cryptographic SHA-256 integrity hashing and unique verification codes.
+                </p>
+                <div class="input-group input-group-sm">
+                    <input type="text" id="footer-verify-input" class="form-control" placeholder="Enter PDI-2026-XXXXX">
+                    <button class="btn btn-pdi-primary" type="button" onclick="const code = document.getElementById('footer-verify-input').value.trim(); if(code) window.location.href='/verify/' + code;">
+                        Verify
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="border-top pt-3 d-flex flex-column flex-sm-row justify-content-between align-items-center small text-muted">
+            <div>© {{ current_year }} AUTO PDI Platform. All rights reserved.</div>
+            <div class="mt-2 mt-sm-0">
+                <span class="badge bg-light text-dark border">Automotive Hackathon Edition</span>
+            </div>
+        </div>
+    </div>
+</footer>

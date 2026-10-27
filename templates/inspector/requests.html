@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Inspection Requests — AUTO PDI{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="inspector-requests-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-primary mb-1">BOOKING PIPELINE</span>
+            <h2 class="fw-bold text-dark mb-0">Assigned Inspection Requests</h2>
+            <p class="text-muted small mb-0">Accept incoming customer bookings and start pre-delivery audits.</p>
+        </div>
+    </div>
+
+    <div id="inspector-all-requests">
+        <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/inspector.js"></script>
+{% endblock %}

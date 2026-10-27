@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Dealer Issue Resolution — AUTO PDI{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="issues-page-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-warning mb-1">DEALER RESOLUTION</span>
+            <h2 class="fw-bold text-dark mb-0">Flagged Issue Resolution Tracker</h2>
+            <p class="text-muted small mb-0">Track pre-delivery repairs, dealer updates, and sign off once corrected.</p>
+        </div>
+    </div>
+
+    <div class="pdi-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive">
+            <table class="pdi-table">
+                <thead>
+                    <tr>
+                        <th>Issue #</th>
+                        <th>Checkpoint & Severity</th>
+                        <th>Defect Description</th>
+                        <th>Dealer Response & Notes</th>
+                        <th>Timeline Status</th>
+                        <th>Customer Action</th>
+                    </tr>
+                </thead>
+                <tbody id="issues-table-body">
+                    <tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const res = await AutoPDI.api('/api/issues');
+    const tbody = document.getElementById('issues-table-body');
+    if (!tbody || !res.success) return;
+
+    if (res.data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted">No flagged issues. All vehicles passed inspection without defects!</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = res.data.map(issue => `
+        <tr>
+            <td class="font-monospace fw-bold">#ISS-${issue.id}</td>
+            <td>
+                <strong>${issue.checkpoint_name}</strong>
+                <span class="pdi-badge ${issue.severity === 'LOW' ? 'pdi-badge-warning' : 'pdi-badge-danger'} d-block mt-1" style="width:fit-content; font-size:0.65rem;">
+                    ${issue.severity} SEVERITY
+                </span>
+            </td>
+            <td class="small text-dark" style="max-width: 260px;">
+                ${issue.issue_description}
+                <small class="d-block text-muted mt-1">Logged on: ${issue.created_at}</small>
+            </td>
+            <td class="small text-muted" style="max-width: 240px;">
+                ${issue.dealer_response ? `<div class="p-2 bg-light rounded border text-dark"><b>Dealer:</b> ${issue.dealer_response}</div>` : '<span class="text-muted fst-italic">Awaiting dealer acknowledgement</span>'}
+            </td>
+            <td>
+                <span class="pdi-badge ${issue.status === 'CUSTOMER_VERIFIED' ? 'pdi-badge-success' : issue.status === 'RESOLVED' ? 'pdi-badge-primary' : 'pdi-badge-warning'}">
+                    ${issue.status.replace('_', ' ')}
+                </span>
+            </td>
+            <td>
+                ${issue.status === 'RESOLVED' ? `
+                    <button class="btn btn-pdi-success btn-sm text-nowrap" onclick="verifyIssue(${issue.id})">
+                        <i class="bi bi-check2-circle me-1"></i>Verify Fix
+                    </button>
+                ` : issue.status === 'CUSTOMER_VERIFIED' ? `
+                    <span class="badge bg-success-subtle text-success p-2"><i class="bi bi-check-all me-1"></i>Verified ✓</span>
+                ` : `
+                    <span class="text-muted small">In Progress</span>
+                `}
+            </td>
+        </tr>
+    `).join('');
+});
+
+async function verifyIssue(id) {
+    const res = await AutoPDI.api(`/api/issues/${id}/verify`, { method: 'PUT' });
+    if (res.success) {
+        AutoPDI.toast('Issue resolution verified by customer ✓', 'success');
+        window.location.reload();
+    }
+}
+</script>
+{% endblock %}
