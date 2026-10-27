@@ -277,3 +277,4 @@ All unit tests covering Authentication, Booking Workflows, 6-Factor Smart Matchi
 
 ---
 *Built with ❤️ for the Automotive & Smart Systems Hackathon.*
+AUTO PDI automatic Jenkins trigger test.
