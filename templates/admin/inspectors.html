@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Inspector Verification & Approvals — AUTO PDI Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="admin-inspectors-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-primary mb-1">INSPECTOR AUDIT</span>
+            <h2 class="fw-bold text-dark mb-0">Inspector Management & Approvals</h2>
+            <p class="text-muted small mb-0">Verify inspector credentials, diagnostic equipment, and certificate validity.</p>
+        </div>
+    </div>
+
+    <div class="pdi-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive">
+            <table class="pdi-table">
+                <thead>
+                    <tr>
+                        <th>Inspector Name</th>
+                        <th>Experience</th>
+                        <th>Rating (Inspections)</th>
+                        <th>Trust Score</th>
+                        <th>Verification Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-inspectors-table-body">
+                    <tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Inspector Credentials Audit -->
+<div class="modal fade" id="inspectorDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-xl" style="border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-shield-check text-primary me-2"></i>Inspector Audit & Credentials</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="inspector-modal-content">
+                <!-- Injected dynamically by admin.js -->
+            </div>
+            <div class="modal-footer border-top bg-light">
+                <button type="button" class="btn btn-pdi-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin.js"></script>
+{% endblock %}

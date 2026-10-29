@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Live PDI Console — AUTO PDI{% endblock %}
+
+{% block content %}
+<div id="inspection-workflow-container" data-inspection-id="{{ inspection.id }}">
+    
+    <!-- Sticky Top Inspection Header -->
+    <div class="inspection-header-sticky">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                <!-- Vehicle Info -->
+                <div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="pdi-badge pdi-badge-primary" id="disp-vehicle-type">ICE</span>
+                        <h5 class="fw-bold text-dark mb-0" id="disp-vehicle-title">Loading Vehicle...</h5>
+                        <span class="offline-pill online" id="offline-status-pill">
+                            <i class="bi bi-wifi"></i> Online
+                        </span>
+                    </div>
+                    <small class="text-muted font-monospace">VIN: <span id="disp-vin">DEMO...</span> | Code: <b id="disp-verification-code">PDI-2026-X</b></small>
+                </div>
+
+                <!-- Progress, Timer & Actions -->
+                <div class="d-flex align-items-center gap-3">
+                    <div class="text-center d-none d-sm-block">
+                        <small class="text-muted d-block" style="font-size: 0.68rem;">TIMER</small>
+                        <span class="fw-bold font-monospace text-primary" id="inspection-timer-disp">00:00:00</span>
+                    </div>
+
+                    <!-- Live Readiness Score -->
+                    <div class="d-flex align-items-center gap-2 bg-light p-1 px-3 rounded-pill border">
+                        <small class="text-muted fw-bold" style="font-size: 0.72rem;">LIVE SCORE:</small>
+                        <span class="fw-bold fs-5 text-primary" id="header-live-score">0.0</span>
+                    </div>
+
+                    <!-- Complete Inspection Button -->
+                    <button type="button" class="btn btn-pdi-success btn-sm text-nowrap" id="btn-complete-inspection" style="display: none;">
+                        <i class="bi bi-check-all me-1"></i>Complete Inspection
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress mt-2" style="height: 6px; border-radius: 4px;">
+                <div class="progress-bar bg-primary" id="inspection-progress-bar" style="width: 0%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container py-4">
+
+        <!-- VIN Verification Gate (Pre-Start Barrier) -->
+        <div class="pdi-card p-4 mb-4 border-2 shadow-md" id="vin-verification-banner" style="border-color: #BFDBFE;">
+            <div class="d-flex align-items-start gap-3">
+                <div class="metric-icon-box metric-icon-blue">
+                    <i class="bi bi-upc-scan"></i>
+                </div>
+                <div style="flex: 1;">
+                    <h5 class="fw-bold text-dark mb-1">Step 1: Mandatory Vehicle VIN Match</h5>
+                    <p class="text-muted small mb-3">Inspectors must physically verify the chassis stamping before unlocking checklist items.</p>
+                    
+                    <div id="vin-input-group" class="d-flex flex-wrap gap-2 max-w-500">
+                        <input type="text" id="input-verify-vin" class="form-control-custom font-monospace" placeholder="Enter or scan 17-digit VIN">
+                        <button type="button" class="btn btn-pdi-primary" id="btn-verify-vin">
+                            <i class="bi bi-patch-check me-1"></i> Verify VIN
+                        </button>
+                    </div>
+
+                    <div id="vin-success-badge" class="badge bg-success p-2 px-3 fs-6 mt-2" style="display: none;">
+                        <i class="bi bi-check2-circle me-1"></i> Vehicle Verified ✓
+                    </div>
+
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-pdi-success" id="btn-start-inspection" disabled>
+                            <i class="bi bi-play-circle-fill me-1"></i> START INSPECTION
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Checkpoints Console -->
+        <div id="checklist-main-section">
+            <!-- Category Navigation Bar -->
+            <div class="category-nav-bar mb-3" id="category-nav-bar">
+                <div class="spinner-border spinner-border-sm text-primary"></div>
+            </div>
+
+            <!-- Checkpoint Cards List -->
+            <div id="checkpoints-container">
+                <div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted">Loading dynamic checklist items...</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/inspection.js"></script>
+{% endblock %}

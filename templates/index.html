@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block title %}AUTO PDI — Inspect Before You Accept | Smart Car Inspection Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-light">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white border mb-3 shadow-sm">
+                    <span class="badge bg-primary text-white">NEW</span>
+                    <small class="fw-bold text-dark">Smart Automotive Pre-Delivery Inspection Platform</small>
+                </div>
+                <h1 class="hero-title">
+                    Inspect after<br><span>delivery.</span>
+                </h1>
+                <p class="hero-lead">
+                    Protect your car investment. Connect with certified PDI diagnostic masters equipped with digital paint gauges, OBD-II scanners, and AI-assisted defect detection before showroom delivery.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="/customer/book" class="btn btn-pdi-primary btn-lg">
+                        <i class="bi bi-calendar-plus me-1"></i> Book New PDI Inspection
+                    </a>
+                    <a href="/verify" class="btn btn-pdi-secondary btn-lg">
+                        <i class="bi bi-patch-check me-1"></i> Verify PDI Report
+                    </a>
+                </div>
+                <div class="d-flex align-items-center gap-4 text-muted small">
+                    <div><i class="bi bi-check-circle-fill text-success me-1"></i> 100+ Checkpoints</div>
+                    <div><i class="bi bi-check-circle-fill text-success me-1"></i> ICE • EV • Hybrid</div>
+                    <div><i class="bi bi-check-circle-fill text-success me-1"></i> AI Damage Detection</div>
+                </div>
+            </div>
+
+            <!-- Interactive Live Readiness Gauge Preview -->
+            <div class="col-lg-5">
+                <div class="pdi-card p-4 shadow-xl border-2" style="border-color: #BFDBFE;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="pdi-badge pdi-badge-success"><i class="bi bi-check2-circle me-1"></i>DELIVERY READY</span>
+                        <span class="small font-monospace text-muted">PDI-2026-X8Y9Z</span>
+                    </div>
+
+                    <div class="text-center my-3">
+                        <div class="readiness-gauge">
+                            <div class="gauge-circle status-green">
+                                <span class="gauge-score">96</span>
+                                <span class="gauge-label">SCORE</span>
+                            </div>
+                        </div>
+                        <h5 class="fw-bold mt-2 mb-0 text-dark">Hyundai Creta SX(O)</h5>
+                        <small class="text-muted">Certified PDI by Arun Kumar (★ 4.9)</small>
+                    </div>
+
+                    <div class="bg-light p-3 rounded-3 mt-3">
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>Paint & Exterior (20%)</span>
+                            <span class="fw-bold text-success">98%</span>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>Mechanical & Fluids (25%)</span>
+                            <span class="fw-bold text-success">100%</span>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>Electrical & AC (15%)</span>
+                            <span class="fw-bold text-success">95%</span>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted">
+                            <span>AI Surface Scan</span>
+                            <span class="fw-bold text-primary">No Defects</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Credentials Quick Access Banner -->
+<section class="py-3 bg-white border-bottom">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-key-fill text-primary fs-5"></i>
+                <span class="fw-bold text-dark">Hackathon Demo Accounts:</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="/login" class="btn btn-outline-primary btn-sm" onclick="localStorage.setItem('demo_role', 'customer')">
+                    Customer: <b>customer@autopdi.com</b> / <b>Customer@123</b>
+                </a>
+                <a href="/login" class="btn btn-outline-primary btn-sm" onclick="localStorage.setItem('demo_role', 'inspector')">
+                    Inspector: <b>inspector@autopdi.com</b> / <b>Inspector@123</b>
+                </a>
+                <a href="/login" class="btn btn-outline-primary btn-sm" onclick="localStorage.setItem('demo_role', 'admin')">
+                    Admin: <b>admin@autopdi.com</b> / <b>Admin@123</b>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Product Differentiators Grid -->
+<section class="py-5 bg-main">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="pdi-badge pdi-badge-primary mb-2">SMART AUTOMOTIVE TECH</span>
+            <h2 class="fw-bold fs-1 text-dark">Why AUTO PDI is Ahead</h2>
+            <p class="text-muted">Not just a booking app. An end-to-end intelligent inspection and dealer resolution platform.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- 1. Smart Inspector Matching -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pdi-card pdi-card-hover h-100 p-4">
+                    <div class="metric-icon-box metric-icon-blue mb-3">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">6-Factor Smart Matching</h5>
+                    <p class="text-muted small">
+                        Calculates matching scores (Skill 30%, Equipment 25%, Distance 15%, Experience 10%, Rating 10%, Availability 10%) to assign the optimal specialist.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 2. AI-Assisted Damage Detection -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pdi-card pdi-card-hover h-100 p-4">
+                    <div class="metric-icon-box metric-icon-purple mb-3">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">AI Damage Detection</h5>
+                    <p class="text-muted small">
+                        Analyzes vehicle photographs to flag clear-coat scratches, shallow panel dents, orange peel textures, and panel gap misalignment with confidence scores.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3. Dynamic Vehicle Checklists -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pdi-card pdi-card-hover h-100 p-4">
+                    <div class="metric-icon-box metric-icon-green mb-3">
+                        <i class="bi bi-list-check"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Vehicle-Specific Checklists</h5>
+                    <p class="text-muted small">
+                        Dynamic checkpoints tailored for ICE engines, EV Traction Battery / CCS2 DC fast charging / Regen, and Hybrid regenerative powertrains.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 4. Category-Weighted Readiness Score -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pdi-card pdi-card-hover h-100 p-4">
+                    <div class="metric-icon-box metric-icon-amber mb-3">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Vehicle Readiness Score</h5>
+                    <p class="text-muted small">
+                        Automotive engineering weighted formula: Exterior (20%), Interior (15%), Mechanical (25%), Electrical (15%), Safety (15%), and Documents (10%).
+                    </p>
+                </div>
+            </div>
+
+            <!-- 5. Dealer Issue Resolution Workflow -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pdi-card pdi-card-hover h-100 p-4">
+                    <div class="metric-icon-box metric-icon-blue mb-3">
+                        <i class="bi bi-wrench-adjustable"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Dealer Issue Resolution</h5>
+                    <p class="text-muted small">
+                        Automated defect ticketing from Attention/Fail checkpoints. Timeline tracking from Dealer Notified → Repair In Progress → Customer Verified.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 6. Digital Hashed Certificate -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pdi-card pdi-card-hover h-100 p-4">
+                    <div class="metric-icon-box metric-icon-green mb-3">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Tamper-Proof Certificate</h5>
+                    <p class="text-muted small">
+                        Generates downloadable PDF reports with SHA-256 integrity hashes and unique verification codes for instant dealer and public authenticity checks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5 bg-white border-top">
+    <div class="container text-center py-4">
+        <h2 class="fw-bold text-dark mb-3">Ready to Inspect Your Next Car?</h2>
+        <p class="text-muted mb-4 max-w-600 mx-auto">Book certified Pre-Delivery Inspection experts before signing dealership acceptance papers.</p>
+        <a href="/customer/book" class="btn btn-pdi-primary btn-lg">
+            <i class="bi bi-calendar-check me-2"></i>Start PDI Booking Wizard
+        </a>
+    </div>
+</section>
+{% endblock %}

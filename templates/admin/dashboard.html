@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Analytics Console — AUTO PDI{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="admin-dashboard-container">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-primary mb-1">PLATFORM GOVERNANCE</span>
+            <h2 class="fw-bold text-dark mb-0">Platform Analytics & Operations</h2>
+            <p class="text-muted small mb-0">Real-time marketplace KPIs, inspection statuses, and inspector audits.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/admin/inspectors" class="btn btn-pdi-primary">
+                <i class="bi bi-person-check me-1"></i> Inspector Approvals
+            </a>
+            <a href="/admin/bookings" class="btn btn-pdi-secondary">
+                <i class="bi bi-calendar-range me-1"></i> Bookings Oversight
+            </a>
+        </div>
+    </div>
+
+    <!-- 8 KPI Metrics Grid -->
+    <div class="stats-grid">
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Total Customers</h4>
+                <div class="metric-value" id="kpi-customers">0</div>
+            </div>
+            <div class="metric-icon-box metric-icon-blue"><i class="bi bi-people-fill"></i></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Verified Inspectors</h4>
+                <div class="metric-value text-success" id="kpi-inspectors">0</div>
+            </div>
+            <div class="metric-icon-box metric-icon-green"><i class="bi bi-patch-check-fill"></i></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Pending Applications</h4>
+                <div class="metric-value text-warning" id="kpi-pending-inspectors">0</div>
+            </div>
+            <div class="metric-icon-box metric-icon-amber"><i class="bi bi-clock-history"></i></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Total Bookings</h4>
+                <div class="metric-value" id="kpi-bookings">0</div>
+            </div>
+            <div class="metric-icon-box metric-icon-purple"><i class="bi bi-receipt"></i></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Active Inspections</h4>
+                <div class="metric-value text-primary" id="kpi-active-inspections">0</div>
+            </div>
+            <div class="metric-icon-box metric-icon-blue"><i class="bi bi-play-circle-fill"></i></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Completed PDIs</h4>
+                <div class="metric-value text-success" id="kpi-completed-inspections">0</div>
+            </div>
+            <div class="metric-icon-box metric-icon-green"><i class="bi bi-check2-all"></i></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Platform Revenue</h4>
+                <div class="metric-value text-primary" id="kpi-revenue">₹0</div>
+            </div>
+            <div class="metric-icon-box metric-icon-purple"><i class="bi bi-currency-rupee"></i></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <h4>Average Rating</h4>
+                <div class="metric-value text-warning" id="kpi-rating">★ 4.9</div>
+            </div>
+            <div class="metric-icon-box metric-icon-amber"><i class="bi bi-star-fill"></i></div>
+        </div>
+    </div>
+
+    <!-- 5 Chart.js Charts Grid -->
+    <div class="row g-4 mb-4">
+        <!-- 1. Monthly Trend Line Chart -->
+        <div class="col-lg-8">
+            <div class="pdi-card h-100 p-4">
+                <div class="pdi-card-header">
+                    <div class="pdi-card-title"><i class="bi bi-graph-up text-primary"></i> Monthly PDI Inspection Demand</div>
+                </div>
+                <div style="height: 260px;">
+                    <canvas id="chart-monthly-trend"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Booking Status Doughnut -->
+        <div class="col-lg-4">
+            <div class="pdi-card h-100 p-4">
+                <div class="pdi-card-header">
+                    <div class="pdi-card-title"><i class="bi bi-pie-chart text-warning"></i> Booking Lifecycle</div>
+                </div>
+                <div style="height: 260px;">
+                    <canvas id="chart-booking-status"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Vehicle Types Distribution -->
+        <div class="col-lg-4">
+            <div class="pdi-card h-100 p-4">
+                <div class="pdi-card-header">
+                    <div class="pdi-card-title"><i class="bi bi-car-front text-primary"></i> Powertrain Distribution</div>
+                </div>
+                <div style="height: 240px;">
+                    <canvas id="chart-vehicle-types"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Standard vs Premium Package Tier -->
+        <div class="col-lg-4">
+            <div class="pdi-card h-100 p-4">
+                <div class="pdi-card-header">
+                    <div class="pdi-card-title"><i class="bi bi-bar-chart text-success"></i> Package Preference</div>
+                </div>
+                <div style="height: 240px;">
+                    <canvas id="chart-packages"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Readiness Verdict Breakdown -->
+        <div class="col-lg-4">
+            <div class="pdi-card h-100 p-4">
+                <div class="pdi-card-header">
+                    <div class="pdi-card-title"><i class="bi bi-speedometer2 text-danger"></i> Readiness Verdicts</div>
+                </div>
+                <div style="height: 240px;">
+                    <canvas id="chart-verdicts"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Inspectors Leaderboard -->
+    <div class="pdi-card p-4">
+        <div class="pdi-card-header">
+            <div class="pdi-card-title">
+                <i class="bi bi-trophy-fill text-warning"></i> Top Certified PDI Inspectors
+            </div>
+            <a href="/admin/inspectors" class="small fw-bold text-primary">Manage All</a>
+        </div>
+        <div id="admin-top-inspectors-list">
+            <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin.js"></script>
+{% endblock %}

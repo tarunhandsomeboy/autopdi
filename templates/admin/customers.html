@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Customers Directory — AUTO PDI Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-primary mb-1">USER DIRECTORY</span>
+            <h2 class="fw-bold text-dark mb-0">Registered Customers</h2>
+            <p class="text-muted small mb-0">View all car buyers registered across the platform.</p>
+        </div>
+    </div>
+
+    <div class="pdi-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive">
+            <table class="pdi-table">
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Name</th>
+                        <th>Email Address</th>
+                        <th>Phone</th>
+                        <th>Account Status</th>
+                        <th>Member Since</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-customers-table-body">
+                    <tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const res = await AutoPDI.api('/api/admin/users');
+    const tbody = document.getElementById('admin-customers-table-body');
+    if (!tbody || !res.success) return;
+
+    const customers = res.data.filter(u => u.role === 'CUSTOMER');
+    if (customers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted">No customers registered yet.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = customers.map(c => `
+        <tr>
+            <td class="font-monospace fw-bold">#CUST-${c.id}</td>
+            <td><strong>${c.name}</strong></td>
+            <td>${c.email}</td>
+            <td>${c.phone || 'N/A'}</td>
+            <td><span class="pdi-badge pdi-badge-success">${c.status}</span></td>
+            <td class="small text-muted">${new Date(c.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+        </tr>
+    `).join('');
+});
+</script>
+{% endblock %}

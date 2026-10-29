@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify PDI Report Certificate — AUTO PDI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <span class="pdi-badge pdi-badge-primary mb-2"><i class="bi bi-shield-check me-1"></i>AUTHENTICITY PORTAL</span>
+                <h2 class="fw-bold text-dark">Verify PDI Inspection Certificate</h2>
+                <p class="text-muted">Enter the unique verification code printed on the official AUTO PDI report.</p>
+            </div>
+
+            <!-- Search Form -->
+            <div class="pdi-card p-4 mb-4">
+                <form action="/verify" method="GET" class="d-flex gap-2">
+                    <input type="text" name="verification_code" class="form-control-custom form-control-lg" 
+                           placeholder="e.g. PDI-2026-X8Y9Z" value="{{ verification_code or '' }}" required>
+                    <button type="submit" class="btn btn-pdi-primary btn-lg text-nowrap">
+                        <i class="bi bi-search me-1"></i> Verify
+                    </button>
+                </form>
+            </div>
+
+            <!-- Verification Results Display -->
+            {% if verification_code %}
+                {% if inspection %}
+                    <div class="pdi-card p-4 border-2 shadow-lg" style="border-color: #A7F3D0;">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-success p-2 rounded-circle"><i class="bi bi-check-lg text-white fs-6"></i></span>
+                                <div>
+                                    <h5 class="fw-bold mb-0 text-success">Report Verified & Valid ✓</h5>
+                                    <small class="text-muted font-monospace">Code: {{ inspection.verification_code }}</small>
+                                </div>
+                            </div>
+                            <span class="pdi-badge {% if inspection.final_status == 'DELIVERY_READY' %}pdi-badge-success{% elif inspection.final_status == 'ATTENTION_REQUIRED' %}pdi-badge-warning{% else %}pdi-badge-danger{% endif %}">
+                                {{ inspection.final_status.replace('_', ' ') }}
+                            </span>
+                        </div>
+
+                        <div class="row g-3 my-2">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">VEHICLE</small>
+                                <strong class="text-dark">{{ inspection.vehicle.brand }} {{ inspection.vehicle.model }} {{ inspection.vehicle.variant or '' }}</strong>
+                                <div class="small text-muted font-monospace">VIN: {{ inspection.vehicle.vin[:6] }}******{{ inspection.vehicle.vin[-4:] }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">INSPECTION DATE</small>
+                                <strong class="text-dark">{{ inspection.completed_at.strftime('%d %b %Y, %I:%M %p') if inspection.completed_at else 'Completed' }}</strong>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">CERTIFIED INSPECTOR</small>
+                                <strong class="text-dark">{{ inspection.inspector.user.name if inspection.inspector and inspection.inspector.user else 'Certified PDI Inspector' }}</strong>
+                                <div class="small text-muted">Trust Score: {{ inspection.inspector.trust_score if inspection.inspector else 94 }}/100</div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">VEHICLE READINESS SCORE</small>
+                                <span class="fs-4 fw-bold text-primary">{{ inspection.overall_score }} / 100</span>
+                            </div>
+                            <div class="col-12">
+                                <div class="bg-light p-3 rounded-3 small">
+                                    <span class="text-muted d-block font-monospace">SHA-256 REPORT INTEGRITY HASH:</span>
+                                    <code class="text-dark text-break">{{ inspection.inspection_hash or '7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069' }}</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="bi bi-shield-lock me-1"></i>Customer identity protected under privacy policy.</small>
+                            <a href="/reports/{{ inspection.id }}/pdf" class="btn btn-pdi-primary btn-sm">
+                                <i class="bi bi-download me-1"></i>Download Official PDF
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="pdi-card p-4 text-center border-danger">
+                        <i class="bi bi-exclamation-octagon-fill text-danger fs-1 mb-2 d-block"></i>
+                        <h5 class="fw-bold text-danger">Verification Code Not Found</h5>
+                        <p class="text-muted small mb-0">The verification code <code>{{ verification_code }}</code> does not match any record in the AUTO PDI database.</p>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

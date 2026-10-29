@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}All PDI Reports — AUTO PDI Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-primary mb-1">AUDIT TRAIL</span>
+            <h2 class="fw-bold text-dark mb-0">Completed PDI Reports</h2>
+            <p class="text-muted small mb-0">Official cryptographically signed inspection certificates.</p>
+        </div>
+    </div>
+
+    <div class="pdi-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive">
+            <table class="pdi-table">
+                <thead>
+                    <tr>
+                        <th>Report Code</th>
+                        <th>Vehicle</th>
+                        <th>Inspector</th>
+                        <th>Readiness Score</th>
+                        <th>Delivery Verdict</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-reports-table-body">
+                    <tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const res = await AutoPDI.api('/api/bookings');
+    const tbody = document.getElementById('admin-reports-table-body');
+    if (!tbody || !res.success) return;
+
+    const completed = res.data.filter(b => b.status === 'COMPLETED' && b.inspection_id);
+    if (completed.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted">No completed reports generated yet.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = completed.map(b => `
+        <tr>
+            <td class="font-monospace fw-bold text-primary">${b.verification_code || 'PDI-2026-X'}</td>
+            <td>
+                <strong>${b.vehicle ? b.vehicle.brand + ' ' + b.vehicle.model : 'Vehicle'}</strong>
+                <small class="d-block text-muted font-monospace">VIN: ${b.vehicle ? b.vehicle.vin : ''}</small>
+            </td>
+            <td>${b.inspector_name || 'Inspector'}</td>
+            <td><strong class="fs-6">${b.overall_score || 0} / 100</strong></td>
+            <td>
+                <span class="pdi-badge ${b.final_status === 'DELIVERY_READY' ? 'pdi-badge-success' : b.final_status === 'ATTENTION_REQUIRED' ? 'pdi-badge-warning' : 'pdi-badge-danger'}">
+                    ${b.final_status ? b.final_status.replace('_', ' ') : 'COMPLETED'}
+                </span>
+            </td>
+            <td>
+                <div class="d-flex gap-1">
+                    <a href="/customer/report/${b.inspection_id}" class="btn btn-pdi-secondary btn-sm"><i class="bi bi-file-text me-1"></i>View</a>
+                    <a href="/reports/${b.inspection_id}/pdf" class="btn btn-pdi-primary btn-sm" target="_blank"><i class="bi bi-download"></i></a>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+});
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Inspector Profile & Equipment — AUTO PDI{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="inspector-profile-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-primary mb-1">CREDENTIALS</span>
+            <h2 class="fw-bold text-dark mb-0">Professional Profile & Equipment</h2>
+            <p class="text-muted small mb-0">Manage verified diagnostic tools, certifications, and availability.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left: Profile Details -->
+        <div class="col-lg-6">
+            <div class="pdi-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3">Profile Information</h5>
+                <form id="inspector-profile-form">
+                    <div class="mb-3">
+                        <label class="form-label-custom">Specialization & Brands</label>
+                        <input type="text" id="prof-spec" class="form-control-custom" placeholder="e.g. ICE, EV, Hybrid - Tata, Hyundai">
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label-custom">Experience (Years)</label>
+                            <input type="number" id="prof-experience" class="form-control-custom" min="1" max="40">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label-custom">Availability Status</label>
+                            <select id="prof-availability" class="form-control-custom">
+                                <option value="AVAILABLE">Available for PDI</option>
+                                <option value="BUSY">Busy</option>
+                                <option value="OFFLINE">Offline</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label-custom">Standard PDI Rate (₹)</label>
+                            <input type="number" id="prof-price-std" class="form-control-custom">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label-custom">Premium PDI Rate (₹)</label>
+                            <input type="number" id="prof-price-prem" class="form-control-custom">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label-custom">Professional Bio & Diagnostic Summary</label>
+                        <textarea id="prof-bio" class="form-control-custom" rows="3"></textarea>
+                    </div>
+
+                    <button type="button" class="btn btn-pdi-primary" onclick="saveInspectorProfile()">
+                        <i class="bi bi-save me-1"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Equipment & Tool Inventory -->
+        <div class="col-lg-6">
+            <div class="pdi-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark mb-0">Diagnostic Equipment Inventory</h5>
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#addEquipmentCollapse">
+                        <i class="bi bi-plus-circle me-1"></i> Add Tool
+                    </button>
+                </div>
+
+                <!-- Add Equipment Form (Collapsible) -->
+                <div class="collapse mb-3" id="addEquipmentCollapse">
+                    <form id="add-equipment-form" class="p-3 bg-light rounded-3 border">
+                        <div class="mb-2">
+                            <label class="form-label-custom">Tool Name *</label>
+                            <input type="text" id="new_eq_name" class="form-control-custom" placeholder="e.g. Paint Thickness Gauge" required>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label-custom">Category</label>
+                                <select id="new_eq_type" class="form-control-custom">
+                                    <option value="SENSOR">Sensor</option>
+                                    <option value="DIAGNOSTIC">OBD-II Diagnostic</option>
+                                    <option value="OPTICAL">Optical / Thermal</option>
+                                    <option value="ELECTRICAL">Electrical Tester</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Serial Number</label>
+                                <input type="text" id="new_eq_serial" class="form-control-custom" placeholder="SN-9982">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-pdi-primary btn-sm w-100">Submit for Verification</button>
+                    </form>
+                </div>
+
+                <div id="profile-equipment-list">
+                    <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/inspector.js"></script>
+<script>
+async function saveInspectorProfile() {
+    const payload = {
+        bio: document.getElementById('prof-bio').value,
+        experience_years: document.getElementById('prof-experience').value,
+        specialization: document.getElementById('prof-spec').value,
+        availability_status: document.getElementById('prof-availability').value,
+        price_standard: document.getElementById('prof-price-std').value,
+        price_premium: document.getElementById('prof-price-prem').value
+    };
+    const res = await AutoPDI.api('/api/inspector/profile', { method: 'PUT', body: JSON.stringify(payload) });
+    if (res.success) {
+        AutoPDI.toast('Profile updated successfully!', 'success');
+    }
+}
+</script>
+{% endblock %}

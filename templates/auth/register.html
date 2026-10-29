@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account — AUTO PDI Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5 my-auto">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="pdi-card p-4 p-sm-5 shadow-lg">
+                <div class="text-center mb-4">
+                    <div class="logo-icon mx-auto mb-2" style="width: 44px; height: 44px;">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark">Join AUTO PDI</h3>
+                    <p class="text-muted small">Register as a Car Buyer or Certified Inspector</p>
+                </div>
+
+                <form id="register-form">
+                    <div class="mb-3">
+                        <label for="role" class="form-label-custom">Account Type</label>
+                        <select id="role" class="form-control-custom" required>
+                            <option value="CUSTOMER">Car Buyer / Customer (Book PDI Inspections)</option>
+                            <option value="INSPECTOR">PDI Inspector (Conduct Diagnostic Inspections)</option>
+                        </select>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label-custom">Full Name</label>
+                            <input type="text" id="name" class="form-control-custom" placeholder="John Doe" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label-custom">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control-custom" placeholder="+91 98765 43210" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label-custom">Email Address</label>
+                        <input type="email" id="email" class="form-control-custom" placeholder="name@domain.com" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label-custom">Password</label>
+                        <input type="password" id="password" class="form-control-custom" placeholder="At least 6 characters" required>
+                    </div>
+
+                    <!-- Inspector Extra Fields -->
+                    <div id="inspector-extra-fields" style="display: none;" class="p-3 bg-light rounded-3 border mb-3">
+                        <h6 class="fw-bold text-primary mb-2"><i class="bi bi-tools me-1"></i>Professional Credentials</h6>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label-custom">Experience (Years)</label>
+                                <input type="number" id="experience_years" class="form-control-custom" value="3" min="1" max="40">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Specialization</label>
+                                <input type="text" id="specialization" class="form-control-custom" placeholder="e.g. ICE, EV, Hybrid">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label-custom">Professional Bio / Equipment Summary</label>
+                            <textarea id="bio" class="form-control-custom" rows="2" placeholder="Brief summary of diagnostic skills, tools, and background"></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-pdi-primary w-100 py-2">
+                        <i class="bi bi-person-check me-1"></i> Create Account
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 text-muted small">
+                    Already registered? <a href="/login" class="fw-bold text-primary">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/auth.js"></script>
+{% endblock %}

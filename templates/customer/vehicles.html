@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}My Vehicles — AUTO PDI{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="vehicles-page-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="pdi-badge pdi-badge-primary mb-1">GARAGE</span>
+            <h2 class="fw-bold text-dark mb-0">My Registered Vehicles</h2>
+            <p class="text-muted small mb-0">Manage vehicles eligible for Pre-Delivery Inspection.</p>
+        </div>
+        <button type="button" class="btn btn-pdi-primary" data-bs-toggle="modal" data-bs-target="#addVehicleModal">
+            <i class="bi bi-plus-circle me-1"></i> Add Vehicle
+        </button>
+    </div>
+
+    <div class="row" id="vehicles-page-list">
+        <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+    </div>
+</div>
+
+<!-- Modal: Add New Vehicle -->
+<div class="modal fade" id="addVehicleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-xl" style="border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-car-front-fill text-primary me-2"></i>Register Vehicle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="wizard-new-vehicle-form">
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label-custom">Brand *</label>
+                            <input type="text" id="v_brand" class="form-control-custom" placeholder="e.g. Hyundai" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label-custom">Model *</label>
+                            <input type="text" id="v_model" class="form-control-custom" placeholder="e.g. Creta" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-custom">Variant</label>
+                            <input type="text" id="v_variant" class="form-control-custom" placeholder="e.g. SX(O) 1.5 Turbo DCT">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label-custom">Fuel Type</label>
+                            <select id="v_fuel" class="form-control-custom">
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="Electric">Electric</option>
+                                <option value="Hybrid">Strong Hybrid</option>
+                                <option value="CNG">CNG</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label-custom">Vehicle Type *</label>
+                            <select id="v_type" class="form-control-custom">
+                                <option value="ICE">ICE (Internal Combustion)</option>
+                                <option value="EV">EV (Pure Electric)</option>
+                                <option value="HYBRID">Hybrid (Strong Hybrid)</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-custom">Chassis / VIN Number (Optional — Pending Dealer Allotment)</label>
+                            <input type="text" id="v_vin" class="form-control-custom font-monospace" placeholder="Optional (e.g. DEMOVIN123456 or leave blank)">
+                            <small class="text-muted" style="font-size: 0.72rem;">Optional if your dealership has not assigned a chassis/VIN number yet.</small>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-custom">Temporary Reg Number (Optional)</label>
+                            <input type="text" id="v_reg" class="form-control-custom font-monospace" placeholder="e.g. KA03TR9900">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top bg-light">
+                    <button type="button" class="btn btn-pdi-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-pdi-primary">Save Vehicle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/customer.js"></script>
+{% endblock %}
